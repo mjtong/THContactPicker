@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "THContactView.h"
+#import "THContactBubble.h"
+#import "MyTextField.h"
 
 @class THContactPickerView;
 
@@ -15,33 +16,35 @@
 
 - (void)contactPickerTextViewDidChange:(NSString *)textViewText;
 - (void)contactPickerDidRemoveContact:(id)contact;
+- (void)contactPickerWillAddContact:(NSString*)contact;
 - (void)contactPickerDidResize:(THContactPickerView *)contactPickerView;
-- (BOOL)contactPickerTextFieldShouldReturn:(UITextField *)textField;
+//- (BOOL)contactPickerTextView:(UITextView *)textView enterKeyPressedWithText:(NSString *)text;
+- (BOOL)contactPickerTextView:(UITextField *)textView enterKeyPressedWithText:(NSString *)text;
+-(BOOL)recordingViewIsShown;
 
 @end
 
-@interface THContactPickerView : UIView <UITextViewDelegate, THContactViewDelegate, UIScrollViewDelegate, UITextInputTraits>
+@interface THContactPickerView : UIView <UITextViewDelegate, THContactBubbleDelegate, UIScrollViewDelegate, UITextFieldDelegate, MyTextFieldDelegate>
 
-@property (nonatomic, strong) THContactView *selectedContactView;
-@property (nonatomic, assign) IBOutlet id <THContactPickerDelegate>delegate;
-
-@property (nonatomic, assign) BOOL limitToOne;				// only allow the ContactPicker to add one contact
-@property (nonatomic, assign) CGFloat verticalPadding;		// amount of padding above and below each contact view
-@property (nonatomic, assign) NSInteger maxNumberOfLines;	// maximum number of lines the view will display before scrolling
+@property (nonatomic, strong) THContactBubble *selectedContactBubble;
+@property (nonatomic, assign) IBOutlet id <THContactPickerDelegate> delegate;
+@property (nonatomic, assign) BOOL limitToOne;
+@property (nonatomic, assign) CGFloat viewPadding;
 @property (nonatomic, strong) UIFont *font;
+@property (nonatomic, retain) NSMutableDictionary *contacts;
+@property (nonatomic, strong) NSMutableArray *contactKeys; // an ordered set of the keys placed in the contacts dictionary
+@property int maximumRecipients;
 
-- (void)addContact:(id)contact withName:(NSString *)name;
-- (void)removeContact:(id)contact;
+
+- (void)addContact:(NSString *)contact withName:(NSString *)name andPhotoUrl:(NSString *)photoUrl;
+- (void)removeContact:(NSString *)contact;
 - (void)removeAllContacts;
-- (void)resignFirstResponder;
+- (void)setPlaceholderString:(NSString *)placeholderString;
+- (void)disableDropShadow;
+- (void)resignKeyboard;
+- (void)setBubbleColor:(THBubbleColor *)color selectedColor:(THBubbleColor *)selectedColor;
+- (void)checkIfHasTextInTextViewOnSend;
 
-// View Customization
-- (void)setContactViewStyle:(THContactViewStyle *)color selectedStyle:(THContactViewStyle *)selectedColor;
-- (void)setPlaceholderLabelText:(NSString *)text;
-- (void)setPlaceholderLabelTextColor:(UIColor *)color;
-- (void)setPromptLabelText:(NSString *)text;
-- (void)setPromptLabelAttributedText:(NSAttributedString *)attributedText;
-- (void)setPromptLabelTextColor:(UIColor *)color;
-- (void)setFont:(UIFont *)font;
-
+//added functions
+- (void)changeContactPickerFrameTo:(CGRect)newFrame;
 @end
