@@ -76,7 +76,12 @@
 
     self.contactPhoto = [[UIImageView alloc] init];
     //[self.contactPhoto setImageWithURL:[NSURL URLWithString:self.photoUrl] placeholderImage:[UIImage imageNamed:@"img_contact.png"] options:0];
+#if CTM_OLD
     [self.contactPhoto setImageWithURL:[NSURL URLWithString:self.photoUrl] placeholderImage:[UIImage imageNamed:@"profile-pic.png"] options:SDWebImageRefreshCached];
+#else
+    [self.contactPhoto sd_setImageWithURL:[NSURL URLWithString:self.photoUrl] placeholderImage:[UIImage imageNamed:@"profile-pic.png"] options:SDWebImageRefreshCached];
+#endif
+
     [self addSubview:self.contactPhoto];
 
 
